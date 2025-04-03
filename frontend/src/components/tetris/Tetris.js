@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { createTetromino, TETROMINOS } from '../tetrominos';
-import { checkCollision, createStage } from '../gameHelpers';
+import { createTetromino, TETROMINOS } from '../../games/tetrominos';
+import { checkCollision, createStage } from '../../games/gameHelpers';
 
 const Tetris = ({ playerName, onBackToMenu }) => {
   const [dropTime, setDropTime] = useState(null);

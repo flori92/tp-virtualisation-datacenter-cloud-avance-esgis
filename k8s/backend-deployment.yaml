@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: games-backend
-        image: ${DOCKER_USERNAME}/games-backend:latest
+        image: esgis-games/games-backend:latest
         ports:
         - containerPort: 5000
         env:

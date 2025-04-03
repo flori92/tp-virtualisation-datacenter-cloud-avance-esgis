@@ -6,12 +6,8 @@
 
 set -e
 
-# Vérifier si les variables d'environnement nécessaires sont définies
-if [ -z "$DOCKER_USERNAME" ]; then
-  echo "Erreur: La variable d'environnement DOCKER_USERNAME n'est pas définie."
-  echo "Veuillez l'exporter avec: export DOCKER_USERNAME=votre_nom_utilisateur_docker"
-  exit 1
-fi
+# Nom d'utilisateur Docker par défaut
+DOCKER_USERNAME="esgis-games"
 
 # Vérifier si Minikube est en cours d'exécution
 if ! minikube status > /dev/null 2>&1; then
