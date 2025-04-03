@@ -124,10 +124,12 @@ tetris-kubernetes-tp/
 - Affichage de la pièce suivante
 
 ### Jeu de Pendu
-- Dictionnaire de mots en français
-- Interface graphique avec dessin du pendu
-- Clavier virtuel pour les lettres
+- Large sélection de mots de différentes difficultés
 - Système de score basé sur la difficulté du mot et le nombre d'erreurs
+- Représentation visuelle du pendu
+- Mode continu permettant d'accumuler des points sur plusieurs parties consécutives
+- Bonus de score pour les victoires consécutives
+- Sauvegarde des meilleurs scores
 
 ### Système de classement
 - Sauvegarde persistante des scores dans MongoDB
