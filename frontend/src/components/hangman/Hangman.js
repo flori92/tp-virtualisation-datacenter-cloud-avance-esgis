@@ -12,7 +12,9 @@ const Hangman = ({ playerName, onBackToMenu }) => {
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
   const [score, setScore] = useState(0);
+  const [totalScore, setTotalScore] = useState(0);
   const [scoreSaved, setScoreSaved] = useState(false);
+  const [consecutiveWins, setConsecutiveWins] = useState(0);
   
   // Nombre maximum d'erreurs avant de perdre
   const MAX_MISTAKES = 6;
@@ -25,11 +27,11 @@ const Hangman = ({ playerName, onBackToMenu }) => {
   // Sauvegarder le score en fin de partie
   useEffect(() => {
     const saveScore = async () => {
-      if ((gameOver || gameWon) && !scoreSaved && score > 0) {
+      if (gameOver && !scoreSaved && totalScore > 0) {
         try {
           await axios.post('/api/scores', {
             playerName,
-            score,
+            score: totalScore,
             game: 'hangman'
           });
           setScoreSaved(true);
@@ -40,7 +42,7 @@ const Hangman = ({ playerName, onBackToMenu }) => {
     };
     
     saveScore();
-  }, [gameOver, gameWon, scoreSaved, playerName, score]);
+  }, [gameOver, scoreSaved, playerName, totalScore]);
   
   // Démarrer une nouvelle partie
   const startGame = () => {
@@ -51,7 +53,22 @@ const Hangman = ({ playerName, onBackToMenu }) => {
     setGameOver(false);
     setGameWon(false);
     setScore(0);
-    setScoreSaved(false);
+    
+    // Ne réinitialise pas le score total lors d'une nouvelle partie
+    if (scoreSaved) {
+      setTotalScore(0);
+      setConsecutiveWins(0);
+      setScoreSaved(false);
+    }
+  };
+  
+  // Continuer avec un nouveau mot après une victoire
+  const continueGame = () => {
+    const newWord = getRandomWord();
+    setWord(newWord);
+    setGuessedLetters([]);
+    setWrongLetters([]);
+    setGameWon(false);
   };
   
   // Gérer les lettres devinées
@@ -71,7 +88,7 @@ const Hangman = ({ playerName, onBackToMenu }) => {
       // Vérifier si le joueur a perdu
       if (wrongLetters.length + 1 >= MAX_MISTAKES) {
         setGameOver(true);
-        setScore(calculateScore(word, guessedLetters, wrongLetters.length + 1));
+        // Le score total reste inchangé en cas de défaite
       }
     } else {
       // Vérifier si le joueur a gagné
@@ -82,7 +99,17 @@ const Hangman = ({ playerName, onBackToMenu }) => {
       
       if (correctGuesses.length === uniqueLettersInWord.length) {
         setGameWon(true);
-        setScore(calculateScore(word, [...guessedLetters, letter], wrongLetters.length));
+        const roundScore = calculateScore(word, [...guessedLetters, letter], wrongLetters.length);
+        setScore(roundScore);
+        
+        // Augmenter le nombre de victoires consécutives
+        setConsecutiveWins(prev => prev + 1);
+        
+        // Ajouter un bonus pour les victoires consécutives (10% par victoire)
+        const consecutiveBonus = Math.floor(roundScore * (0.1 * (consecutiveWins + 1)));
+        
+        // Mettre à jour le score total
+        setTotalScore(prev => prev + roundScore + consecutiveBonus);
       }
     }
   };
@@ -91,6 +118,8 @@ const Hangman = ({ playerName, onBackToMenu }) => {
     <div className="hangman-container">
       <h2>Jeu du Pendu</h2>
       <p>Joueur: {playerName}</p>
+      <p>Score Total: {totalScore}</p>
+      {consecutiveWins > 0 && <p>Victoires consécutives: {consecutiveWins}</p>}
       
       <div className="hangman-game">
         <HangmanDrawing wrongLetters={wrongLetters} />
@@ -110,16 +139,26 @@ const Hangman = ({ playerName, onBackToMenu }) => {
           />
         </div>
         
-        {(gameOver || gameWon) && (
+        {gameOver && (
           <div className="game-result">
-            <h3>{gameWon ? 'Félicitations!' : 'Dommage!'}</h3>
-            <p>{gameWon 
-              ? `Vous avez trouvé le mot: ${word}` 
-              : `Le mot était: ${word}`}
-            </p>
-            <p>Score: {score}</p>
+            <h3>Dommage!</h3>
+            <p>Le mot était: {word}</p>
+            <p>Score Total: {totalScore}</p>
             <div>
               <button onClick={startGame}>Nouvelle partie</button>
+              <button onClick={onBackToMenu}>Retour au menu</button>
+            </div>
+          </div>
+        )}
+        
+        {gameWon && (
+          <div className="game-result">
+            <h3>Félicitations!</h3>
+            <p>Vous avez trouvé le mot: {word}</p>
+            <p>Score de cette manche: {score}</p>
+            <p>Score Total: {totalScore}</p>
+            <div>
+              <button onClick={continueGame}>Continuer</button>
               <button onClick={onBackToMenu}>Retour au menu</button>
             </div>
           </div>
