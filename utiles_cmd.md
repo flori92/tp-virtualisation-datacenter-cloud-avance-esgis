@@ -2,6 +2,28 @@
 
 Ce document liste les commandes utiles pour obtenir des informations sur le déploiement Kubernetes du projet.
 
+## Vérification des Prérequis
+
+```bash
+# Vérifier si Docker est installé et sa version
+docker --version
+
+# Vérifier si Docker est en cours d'exécution
+docker info
+
+# Vérifier si Minikube est installé et sa version
+minikube version
+
+# Vérifier l'état de Minikube
+minikube status
+
+# Vérifier si kubectl est installé et sa version
+kubectl version --client
+
+# Vérifier la connexion à un cluster Kubernetes
+kubectl cluster-info
+```
+
 ## Informations sur le Cluster
 
 ```bash
