@@ -62,6 +62,24 @@ kubectl get pods -n games-namespace -o jsonpath="{.items[*].spec.containers[*].i
 docker images | grep esgis-games
 ```
 
+## Construction et Gestion des Images Docker
+
+```bash
+# Construire l'image Docker du frontend
+docker build -t esgis-games/games-frontend:latest ./frontend
+
+# Construire l'image Docker du backend
+docker build -t esgis-games/games-backend:latest ./backend
+
+# Pousser les images vers Docker Hub (nécessite docker login)
+docker push esgis-games/games-frontend:latest
+docker push esgis-games/games-backend:latest
+
+# Récupérer les images depuis Docker Hub
+docker pull esgis-games/games-frontend:latest
+docker pull esgis-games/games-backend:latest
+```
+
 ## Informations sur le Stockage
 
 ```bash
