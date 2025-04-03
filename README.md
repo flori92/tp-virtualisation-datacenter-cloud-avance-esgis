@@ -77,8 +77,6 @@ docker build -t esgis-games/games-frontend:latest ./frontend
 docker build -t esgis-games/games-backend:latest ./backend
 ```
 
-Cette méthode est automatiquement exécutée par le script `deploy.sh` si vous utilisez la méthode automatisée.
-
 #### Option 2: Créer un compte Docker Hub pour partager les images
 
 Si vous souhaitez partager les images avec d'autres étudiants, vous pouvez:
