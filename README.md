@@ -57,17 +57,12 @@ tetris-kubernetes-tp/
    ./deploy.sh
    ```
 
-4. Ajoutez l'entrée dans votre fichier hosts (le script vous indiquera la commande exacte):
+4. Utilisez le port-forward pour accéder à l'application:
    ```bash
-   sudo sh -c "echo '192.168.49.2 games.minikube.local' >> /etc/hosts"
+   kubectl port-forward -n games-namespace svc/games-frontend-service 8080:80
    ```
 
-5. Démarrez le tunnel Minikube pour exposer l'application:
-   ```bash
-   minikube tunnel
-   ```
-
-6. Accédez à l'application via: http://games.minikube.local
+5. Accédez à l'application via: http://localhost:8080
 
 ### Méthode manuelle
 
@@ -108,17 +103,12 @@ tetris-kubernetes-tp/
    kubectl apply -f k8s/ingress.yaml
    ```
 
-5. Ajoutez l'entrée dans votre fichier hosts:
+5. Utilisez le port-forward pour accéder à l'application:
    ```bash
-   sudo sh -c "echo '$(minikube ip) games.minikube.local' >> /etc/hosts"
+   kubectl port-forward -n games-namespace svc/games-frontend-service 8080:80
    ```
 
-6. Démarrez le tunnel Minikube:
-   ```bash
-   minikube tunnel
-   ```
-
-7. Accédez à l'application via: http://games.minikube.local
+6. Accédez à l'application via: http://localhost:8080
 
 ## Fonctionnalités
 
@@ -173,10 +163,10 @@ Ce TP permet aux étudiants de:
    - Vérifiez que le service MongoDB est correctement déployé: `kubectl get svc -n games-namespace`
    - Assurez-vous que l'URI MongoDB dans le backend est correcte (mongodb://mongodb-service.games-namespace:27017/tetris)
 
-3. **Ingress ne fonctionne pas**:
-   - Vérifiez que l'addon Ingress est activé: `minikube addons enable ingress`
-   - Assurez-vous que le tunnel Minikube est en cours d'exécution: `minikube tunnel`
-   - Vérifiez que l'entrée dans le fichier hosts est correcte
+3. **Accès à l'application**:
+   - L'ingress peut ne pas fonctionner correctement sur certaines configurations
+   - Utilisez plutôt le port-forward: `kubectl port-forward -n games-namespace svc/games-frontend-service 8080:80`
+   - Accédez à l'application via http://localhost:8080
 
 ### Commandes utiles
 
