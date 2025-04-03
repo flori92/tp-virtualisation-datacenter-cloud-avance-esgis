@@ -39,7 +39,7 @@ tetris-kubernetes-tp/
 
 ## Guide de déploiement
 
-### Méthode automatisée (recommandée)
+### Méthode automatisée
 
 1. Clonez le dépôt et accédez au répertoire du projet:
    ```bash
