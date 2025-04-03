@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: games-backend
+  namespace: games-namespace
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: games-backend
+  template:
+    metadata:
+      labels:
+        app: games-backend
+    spec:
+      containers:
+      - name: games-backend
+        image: ${DOCKER_USERNAME}/games-backend:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGODB_URI
+          value: mongodb://mongodb-service.games-namespace.svc.cluster.local:27017/games
+        - name: PORT
+          value: "5000"
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "300m"
+          requests:
+            memory: "128Mi"
+            cpu: "150m"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: games-backend-service
+  namespace: games-namespace
+spec:
+  selector:
+    app: games-backend
+  ports:
+  - port: 5000
+    targetPort: 5000
+  type: ClusterIP
