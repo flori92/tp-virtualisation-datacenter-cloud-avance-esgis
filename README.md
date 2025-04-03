@@ -64,6 +64,47 @@ tetris-kubernetes-tp/
 
 5. Accédez à l'application via: http://localhost:8080
 
+### Récupération des images Docker
+
+Les étudiants ont deux options pour obtenir les images Docker nécessaires:
+
+#### Option 1: Construire les images localement (recommandé)
+
+La méthode la plus simple est de construire les images localement à partir du code source:
+```bash
+# Construire les images
+docker build -t esgis-games/games-frontend:latest ./frontend
+docker build -t esgis-games/games-backend:latest ./backend
+```
+
+Cette méthode est automatiquement exécutée par le script `deploy.sh` si vous utilisez la méthode automatisée.
+
+#### Option 2: Créer un compte Docker Hub pour partager les images
+
+Si vous souhaitez partager les images avec d'autres étudiants, vous pouvez:
+
+1. Créer un compte sur [Docker Hub](https://hub.docker.com/)
+2. Se connecter à Docker Hub en ligne de commande:
+   ```bash
+   docker login
+   ```
+3. Pousser les images vers Docker Hub:
+   ```bash
+   # Rendre le script exécutable
+   chmod +x scripts/push-to-dockerhub.sh
+   
+   # Exécuter le script
+   ./scripts/push-to-dockerhub.sh
+   ```
+
+Les autres étudiants pourront alors récupérer vos images avec:
+```bash
+docker pull votre-username/games-frontend:latest
+docker pull votre-username/games-backend:latest
+```
+
+Ils devront également modifier les fichiers de déploiement Kubernetes pour utiliser ces images.
+
 ### Méthode manuelle
 
 1. Démarrez Minikube:
