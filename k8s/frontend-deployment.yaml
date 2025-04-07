@@ -16,6 +16,7 @@ spec:
       containers:
       - name: games-frontend
         image: esgis-games/games-frontend:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 80
         resources:
